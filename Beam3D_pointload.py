@@ -52,7 +52,7 @@ d = u.geometric_dimension()  # space dimension
 v = TestFunction(V)
 f = Constant((0, 0, 0))
 
-#Point Load at the end
+#Load at the right end
 T = Constant((0, 0, -10))
 a = inner(sigma(u), epsilon(v))*dx
 L = dot(T, v)*ds(1)
