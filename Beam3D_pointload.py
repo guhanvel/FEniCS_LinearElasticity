@@ -28,10 +28,14 @@ class Right(SubDomain):
       
 left = Left()
 right = Right()
-sub_domains = MeshFunction("size_t", mesh)
+sub_domains = FacetFunction("size_t", mesh)
 sub_domains.set_all(0)
-right.mark(sub_domains, 1)
-left.mark(sub_domains, 2)
+#right.mark(sub_domains, 1)
+#left.mark(sub_domains, 2)
+
+#Values are set to 10 just for visualization purpose
+left.mark(sub_domains, 10)
+right.mark(sub_domains,10)
 
 bc = DirichletBC(V, Constant((0, 0, 0)), left)
 ds = Measure("ds")[sub_domains]
@@ -80,6 +84,9 @@ print('min/max u:',
       u_magnitude.vector().array().max())
 
 # Save solution to file in VTK format
+
+#Visualizing the mesh
+File('elasticity/Cantilever_R2.pvd') <<sub_domains
 # File('elasticity/displacement.pvd') << u
 # File('elasticity/von_mises.pvd') << von_Mises
 # File('elasticity/magnitude.pvd') << u_magnitude
