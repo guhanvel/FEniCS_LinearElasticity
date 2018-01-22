@@ -23,23 +23,18 @@ class Left(SubDomain):
     
 class Right(SubDomain):
     def inside(self, x, on_boundary):
-#return on_boundary and  abs(x[0]-L) < 0.2 and abs(x[1]-W) < 0.2  and abs(x[1]-W) < 0.2
       return near(x[0], L)
       
 left = Left()
 right = Right()
 sub_domains = FacetFunction("size_t", mesh)
 sub_domains.set_all(0)
-#right.mark(sub_domains, 1)
-#left.mark(sub_domains, 2)
-
-#Values are set to 10 just for visualization purpose
-left.mark(sub_domains, 10)
-right.mark(sub_domains,10)
+right.mark(sub_domains, 1)
+left.mark(sub_domains, 2)
 
 bc = DirichletBC(V, Constant((0, 0, 0)), left)
-ds = Measure("ds")[sub_domains]
-#ds = ds(subdomain_data = MeshFunction)
+ds = Measure("ds", subdomain_data=sub_domains)
+
 
 # Define strain and stress
 
@@ -57,7 +52,7 @@ v = TestFunction(V)
 f = Constant((0, 0, 0))
 
 #Load at the right end
-T = Constant((0, 0, -10))
+T = Constant((0, 0, -rho*g))
 a = inner(sigma(u), epsilon(v))*dx
 L = dot(T, v)*ds(1)
 
@@ -86,10 +81,10 @@ print('min/max u:',
 # Save solution to file in VTK format
 
 #Visualizing the mesh
-File('elasticity/Cantilever_R2.pvd') <<sub_domains
-# File('elasticity/displacement.pvd') << u
-# File('elasticity/von_mises.pvd') << von_Mises
-# File('elasticity/magnitude.pvd') << u_magnitude
+File('elasticity/Cantilever_final.pvd') <<sub_domains
+File('elasticity/displacement_final.pvd') << u
+File('elasticity/von_mises_final.pvd') << von_Mises
+File('elasticity/magnitude_final.pvd') << u_magnitude
 
 # Hold plot
 #interactive()
