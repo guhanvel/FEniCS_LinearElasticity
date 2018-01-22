@@ -35,7 +35,6 @@ left.mark(sub_domains, 2)
 bc = DirichletBC(V, Constant((0, 0, 0)), left)
 ds = Measure("ds", subdomain_data=sub_domains)
 
-
 # Define strain and stress
 
 def epsilon(u):
@@ -60,20 +59,16 @@ L = dot(T, v)*ds(1)
 u = Function(V)
 solve(a == L, u, bc)
 
-# Plot solution
-plot(u, title='Displacement', mode='displacement')
-
 # Plot stress
 s = sigma(u) - (1./3)*tr(sigma(u))*Identity(d)  # deviatoric stress
 von_Mises = sqrt(3./2*inner(s, s))
 V = FunctionSpace(mesh, 'P', 1)
 von_Mises = project(von_Mises, V)
-plot(von_Mises, title='Stress intensity')
 
 # Compute magnitude of displacement
 u_magnitude = sqrt(dot(u, u))
 u_magnitude = project(u_magnitude, V)
-plot(u_magnitude, 'Displacement magnitude')
+
 print('min/max u:',
       u_magnitude.vector().array().min(),
       u_magnitude.vector().array().max())
@@ -86,6 +81,5 @@ File('elasticity/displacement_final.pvd') << u
 File('elasticity/von_mises_final.pvd') << von_Mises
 File('elasticity/magnitude_final.pvd') << u_magnitude
 
-# Hold plot
-#interactive()
+
 
